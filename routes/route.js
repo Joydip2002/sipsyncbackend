@@ -4,5 +4,7 @@ const router = express.Router();
 
 router.post('/login',AuthController.Login);
 router.post('/register',AuthController.register);
+router.get('/profile/:email',AuthController.getProfile);
+router.post('/checkPassword',AuthController.checkPassword);
 
 module.exports=router;

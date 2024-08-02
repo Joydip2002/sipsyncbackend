@@ -36,7 +36,25 @@ async function register(req,res){
     res.status(200).json(register);
 }
 
+async function getProfile(req, res) {
+    const email = req.params.email;
+    console.log(email);
+    auth.email=email??'';
+    const getProfile= await auth.SipSync_Profile();
+    res.status(200).json(getProfile);
+}
+
+async function checkPassword(req,res){
+    auth.email=req.body.email;
+    auth.password=req.body.password;
+    console.log(req.body.password);
+    const checkUser=await auth.SipSync_CheckPassword();
+    res.status(200).json(checkUser);
+}
+
 module.exports={
     Login:Login,
-    register:register
+    register:register,
+    getProfile:getProfile,
+    checkPassword:checkPassword
 };

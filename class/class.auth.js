@@ -44,6 +44,7 @@ class Auth {
             var response = {};
             
             // Check if required fields are not empty
+            console.log(this.name+" "+ this.email+" "+ this.password+" "+ this.address+ " " + this.cpassword);
             if (this.name && this.email && this.address && this.password) {
                 if(this.password==this.cpassword){
                     // Check if user already exists
@@ -97,6 +98,79 @@ class Auth {
         }
     }
     
+    async SipSync_Profile(){
+        try{
+            var response={};
+            console.log(">>>>>>>"+this.email);
+            if(this.email!=""){
+                const user = await models.Auth.findOne({ where: { email: this.email} });
+                if (user) {
+                    response = {
+                        status: 200,
+                        msg: 'fetched successful',
+                        data: user
+                    };
+                } else {
+                    response = {
+                        status: 401,
+                        msg: 'User not exist!'
+                    };
+                }
+            }else{
+                response={
+                    'status':400,
+                    'msg':'params not found'
+                }
+            }
+            return response;
+        }catch (error) {
+            console.error('Error in SipSync_Login:', error);
+            return {
+                status: 500,
+                msg: 'Internal server error'
+            };
+        }
+    }
+
+    async SipSync_CheckPassword(){
+        try{
+            var response={};
+            if(this.email!="" && this.email!=undefined){
+                console.log(this.email +" "+ this.password);
+                var checkUserQuery=await models.Auth.findOne({where:{email:this.email}});
+                if(checkUserQuery.password == this.password){
+                    if(checkUserQuery){
+                        response={
+                            'status':200,
+                            'msg':'fetching successfull',
+                            'data':checkUserQuery
+                        }
+                    }else{
+                        response={
+                            'status':400,
+                            'msg':'Invalid userid!'
+                        }
+                    }
+                }else{
+                    response={
+                        'status':400,
+                        'msg':'Invalid password',
+                    }
+                }
+            }else{
+                response={
+                    'status':400,
+                    'msg':'email field can not be null'
+                }
+            }
+            return response;
+        }catch(error) {
+            response={
+                'status':400,
+                'msg':error
+            }
+        }
+    }
 }
 
 module.exports = Auth;
